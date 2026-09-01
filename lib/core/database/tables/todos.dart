@@ -8,6 +8,6 @@ class Todos extends Table{
   DateTimeColumn get scheduledAt => dateTime().nullable()();
   DateTimeColumn get completedAt => dateTime().nullable()();
   TextColumn get priority => text()();
-  BoolColumn get isCompleted =>
+  BoolColumn get isCompleted => 
     boolean().withDefault(const Constant(false))();
 }

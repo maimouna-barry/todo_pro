@@ -1,0 +1,17 @@
+min_version: 2.1.10
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.dart"
+      run: dart format {staged_files}
+      stage_fixed: true
+
+    analyze:
+      run: flutter analyze --fatal-infos --no-pub
+
+pre-push:
+  commands:
+    test:
+      run: flutter test

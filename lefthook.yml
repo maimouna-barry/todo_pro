@@ -1,13 +1,15 @@
 min_version: 2.1.10
 
 pre-commit:
-  parallel: true
   commands:
     format:
       glob: "*.dart"
       run: dart format {staged_files}
       stage_fixed: true
 
+    generate:
+      run: dart run build_runner build
+      
     analyze:
       run: flutter analyze --fatal-infos --no-pub
 

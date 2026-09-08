@@ -8,7 +8,8 @@ pre-commit:
       stage_fixed: true
 
     generate:
-      run: dart run build_runner build
+      run: dart run build_runner build {staged_files}
+      stage_fixed: true
       
     analyze:
       run: flutter analyze --fatal-infos --no-pub

@@ -8,7 +8,7 @@ pre-commit:
       stage_fixed: true
 
     generate:
-      run: dart run build_runner build {staged_files}
+      run: dart run build_runner build 
       stage_fixed: true
       
     analyze:

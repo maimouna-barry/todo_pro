@@ -34,4 +34,17 @@ class TodoLocalDataSource {
 
     return await database.into(database.todos).insert(companion);
   }
+
+  Future<void> updateTodo(domain.Todo todo) async {
+    final companion = TodosCompanion(
+      title: Value(todo.title),
+      description: Value(todo.description),
+      scheduledAt: Value(todo.scheduledAt),
+      priority: Value(todo.priority.name),
+    );
+
+    await (database.update(
+      database.todos,
+    )..where((table) => table.id.equals(todo.id))).write(companion);
+  }
 }

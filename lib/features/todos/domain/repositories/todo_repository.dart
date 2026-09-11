@@ -5,7 +5,7 @@ abstract class TodoRepository {
 
   Future<Todo?> getTodo(int id);
 
-  Future<void> createTodo(Todo todo);
+  Future<int> createTodo(Todo todo);
 
   Future<void> updateTodo(Todo todo);
 

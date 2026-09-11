@@ -22,7 +22,7 @@ class TodoLocalDataSource {
     }).toList();
   }
 
-  Future<void> createTodo(domain.Todo todo) async {
+  Future<int> createTodo(domain.Todo todo) async {
     final companion = TodosCompanion(
       title: Value(todo.title),
       description: Value(todo.description),
@@ -32,6 +32,6 @@ class TodoLocalDataSource {
       priority: Value(todo.priority.name),
     );
 
-    await database.into(database.todos).insert(companion);
+    return await database.into(database.todos).insert(companion);
   }
 }

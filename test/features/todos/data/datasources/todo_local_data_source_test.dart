@@ -36,7 +36,6 @@ void main() {
 
     final results = await dataSource.getTodos();
     final titres = results.map((result) => result.title).toList();
-
     expect(results.length, 2);
     expect(results[1].priority, todo2.priority);
     expect(titres, contains(todo1.title));

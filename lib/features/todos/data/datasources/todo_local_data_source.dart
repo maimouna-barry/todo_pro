@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:todo_pro/core/database/app_database.dart';
 import 'package:todo_pro/features/todos/domain/entities/todo.dart' as domain;
 
@@ -19,5 +20,18 @@ class TodoLocalDataSource {
         priority: domain.TodoPriority.values.byName(row.priority),
       );
     }).toList();
+  }
+
+  Future<void> createTodo(domain.Todo todo) async {
+    final companion = TodosCompanion(
+      title: Value(todo.title),
+      description: Value(todo.description),
+      scheduledAt: Value(todo.scheduledAt),
+      createdAt: Value(todo.createdAt),
+      completedAt: Value(todo.completedAt),
+      priority: Value(todo.priority.name),
+    );
+
+    await database.into(database.todos).insert(companion);
   }
 }

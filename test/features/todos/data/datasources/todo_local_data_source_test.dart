@@ -68,6 +68,22 @@ void main() {
     expect(todos.first.priority, domain.TodoPriority.high);
   });
 
+  test('Supprimer une todo existante', () async {
+    final todo = domain.Todo(
+      id: 1,
+      title: 'Regarder the Vikings',
+      createdAt: DateTime(2017, 9, 7, 17, 30),
+      scheduledAt: DateTime(2017, 9, 13, 20, 30),
+      priority: domain.TodoPriority.low,
+    );
+
+    final todoCree = await dataSource.createTodo(todo);
+    await dataSource.deleteTodo(todoCree);
+    final todos = await dataSource.getTodos();
+
+    expect(todos, hasLength(0));
+  });
+
   tearDown(() async {
     await database.close();
   });

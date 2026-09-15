@@ -23,6 +23,28 @@ class TodoLocalDataSource {
     }).toList();
   }
 
+  Future<domain.Todo?> getTodo(int id) async {
+    final result = await (database.select(
+      database.todos,
+    )..where((table) => table.id.equals(id))).get();
+
+    if (result.isEmpty) {
+      return null;
+    }
+
+    final row = result.first;
+
+    return domain.Todo(
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      createdAt: row.createdAt,
+      scheduledAt: row.scheduledAt,
+      completedAt: row.completedAt,
+      priority: domain.TodoPriority.values.byName(row.priority),
+    );
+  }
+
   Future<int> createTodo(domain.Todo todo) async {
     final companion = TodosCompanion(
       title: Value(todo.title),

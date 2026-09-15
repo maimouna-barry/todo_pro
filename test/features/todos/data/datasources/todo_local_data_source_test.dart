@@ -42,6 +42,32 @@ void main() {
     expect(titres, contains(todo2.title));
   });
 
+  test('récupérer une todo existante par son id', () async {
+    final todo = domain.Todo(
+      id: 1,
+      title: 'Faire les courses',
+      description: 'Acheter du lait',
+      createdAt: DateTime(2026, 9, 15, 10, 0),
+      scheduledAt: DateTime(2026, 9, 15, 18, 0),
+      priority: domain.TodoPriority.high,
+    );
+
+    final id = await dataSource.createTodo(todo);
+
+    final result = await dataSource.getTodo(id);
+
+    expect(result, isNotNull);
+    expect(result!.title, 'Faire les courses');
+    expect(result.description, 'Acheter du lait');
+    expect(result.priority, domain.TodoPriority.high);
+  });
+
+  test('retourner null si la todo n’existe pas', () async {
+    final result = await dataSource.getTodo(999);
+
+    expect(result, isNull);
+  });
+
   test('Modifier une todo existante', () async {
     final todoBase = domain.Todo(
       id: 1,

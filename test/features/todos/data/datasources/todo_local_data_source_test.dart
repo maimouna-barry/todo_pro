@@ -42,6 +42,32 @@ void main() {
     expect(titres, contains(todo2.title));
   });
 
+  test('Modifier une todo existante', () async {
+    final todoBase = domain.Todo(
+      id: 1,
+      title: 'Faire le linge',
+      createdAt: DateTime(2026, 9, 15, 9, 0),
+      scheduledAt: DateTime(2026, 9, 19, 9, 0),
+      priority: domain.TodoPriority.medium,
+    );
+
+    await dataSource.createTodo(todoBase);
+
+    final todoModifiee = todoBase.copyWith(
+      title: 'Allez en ville',
+      scheduledAt: DateTime(2026, 9, 19, 9, 0),
+      priority: domain.TodoPriority.high,
+    );
+
+    await dataSource.updateTodo(todoModifiee);
+    final todos = await dataSource.getTodos();
+
+    expect(todos, hasLength(1));
+    expect(todos.first.title, 'Allez en ville');
+    expect(todos.first.scheduledAt, DateTime(2026, 9, 19, 9, 0));
+    expect(todos.first.priority, domain.TodoPriority.high);
+  });
+
   tearDown(() async {
     await database.close();
   });

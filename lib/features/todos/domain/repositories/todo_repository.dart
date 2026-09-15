@@ -10,4 +10,6 @@ abstract class TodoRepository {
   Future<void> updateTodo(Todo todo);
 
   Future<void> deleteTodo(int id);
+
+  Future<void> completedTodo(int id);
 }

@@ -84,6 +84,21 @@ void main() {
     expect(todos, hasLength(0));
   });
 
+  test("terminer une tàche", () async {
+    final todo = domain.Todo(
+      id: 1,
+      title: 'Manger',
+      createdAt: DateTime(2017, 9, 13, 20, 30),
+      priority: domain.TodoPriority.high,
+    );
+
+    final todoBase = await dataSource.createTodo(todo);
+    await dataSource.completedTodo(todoBase);
+    final listeTodos = await dataSource.getTodos();
+
+    expect(listeTodos.first.completedAt, isNotNull);
+  });
+
   tearDown(() async {
     await database.close();
   });

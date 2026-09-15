@@ -17,6 +17,7 @@ class TodoLocalDataSource {
         description: row.description,
         createdAt: row.createdAt,
         scheduledAt: row.scheduledAt,
+        completedAt: row.completedAt,
         priority: domain.TodoPriority.values.byName(row.priority),
       );
     }).toList();
@@ -52,5 +53,11 @@ class TodoLocalDataSource {
     await (database.delete(
       database.todos,
     )..where((table) => table.id.equals(id))).go();
+  }
+
+  Future<void> completedTodo(int id) async {
+    await (database.update(database.todos)
+          ..where((table) => table.id.equals(id)))
+        .write(TodosCompanion(completedAt: Value(DateTime.now())));
   }
 }

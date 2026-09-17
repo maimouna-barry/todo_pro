@@ -7,20 +7,22 @@ class TodoLocalDataSource {
 
   const TodoLocalDataSource(this.database);
 
-  Future<List<domain.Todo>> getTodos() async {
-    final rows = await database.select(database.todos).get();
+  Stream<List<domain.Todo>> watchTodos() {
+    final rows = database.select(database.todos).watch();
 
-    return rows.map((row) {
-      return domain.Todo(
-        id: row.id,
-        title: row.title,
-        description: row.description,
-        createdAt: row.createdAt,
-        scheduledAt: row.scheduledAt,
-        completedAt: row.completedAt,
-        priority: domain.TodoPriority.values.byName(row.priority),
-      );
-    }).toList();
+    return rows.map((rows) {
+      return rows.map((row) {
+        return domain.Todo(
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          createdAt: row.createdAt,
+          scheduledAt: row.scheduledAt,
+          completedAt: row.completedAt,
+          priority: domain.TodoPriority.values.byName(row.priority),
+        );
+      }).toList();
+    });
   }
 
   Future<domain.Todo?> getTodo(int id) async {

@@ -85,21 +85,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _isCompletedMeta = const VerificationMeta(
-    'isCompleted',
-  );
-  @override
-  late final GeneratedColumn<bool> isCompleted = GeneratedColumn<bool>(
-    'is_completed',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_completed" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -109,7 +94,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     scheduledAt,
     completedAt,
     priority,
-    isCompleted,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -177,15 +161,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     } else if (isInserting) {
       context.missing(_priorityMeta);
     }
-    if (data.containsKey('is_completed')) {
-      context.handle(
-        _isCompletedMeta,
-        isCompleted.isAcceptableOrUnknown(
-          data['is_completed']!,
-          _isCompletedMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -223,10 +198,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
         DriftSqlType.string,
         data['${effectivePrefix}priority'],
       )!,
-      isCompleted: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_completed'],
-      )!,
     );
   }
 
@@ -244,7 +215,6 @@ class Todo extends DataClass implements Insertable<Todo> {
   final DateTime? scheduledAt;
   final DateTime? completedAt;
   final String priority;
-  final bool isCompleted;
   const Todo({
     required this.id,
     required this.title,
@@ -253,7 +223,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     this.scheduledAt,
     this.completedAt,
     required this.priority,
-    required this.isCompleted,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -271,7 +240,6 @@ class Todo extends DataClass implements Insertable<Todo> {
       map['completed_at'] = Variable<DateTime>(completedAt);
     }
     map['priority'] = Variable<String>(priority);
-    map['is_completed'] = Variable<bool>(isCompleted);
     return map;
   }
 
@@ -290,7 +258,6 @@ class Todo extends DataClass implements Insertable<Todo> {
           ? const Value.absent()
           : Value(completedAt),
       priority: Value(priority),
-      isCompleted: Value(isCompleted),
     );
   }
 
@@ -307,7 +274,6 @@ class Todo extends DataClass implements Insertable<Todo> {
       scheduledAt: serializer.fromJson<DateTime?>(json['scheduledAt']),
       completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
       priority: serializer.fromJson<String>(json['priority']),
-      isCompleted: serializer.fromJson<bool>(json['isCompleted']),
     );
   }
   @override
@@ -321,7 +287,6 @@ class Todo extends DataClass implements Insertable<Todo> {
       'scheduledAt': serializer.toJson<DateTime?>(scheduledAt),
       'completedAt': serializer.toJson<DateTime?>(completedAt),
       'priority': serializer.toJson<String>(priority),
-      'isCompleted': serializer.toJson<bool>(isCompleted),
     };
   }
 
@@ -333,7 +298,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     Value<DateTime?> scheduledAt = const Value.absent(),
     Value<DateTime?> completedAt = const Value.absent(),
     String? priority,
-    bool? isCompleted,
   }) => Todo(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -342,7 +306,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     scheduledAt: scheduledAt.present ? scheduledAt.value : this.scheduledAt,
     completedAt: completedAt.present ? completedAt.value : this.completedAt,
     priority: priority ?? this.priority,
-    isCompleted: isCompleted ?? this.isCompleted,
   );
   Todo copyWithCompanion(TodosCompanion data) {
     return Todo(
@@ -359,9 +322,6 @@ class Todo extends DataClass implements Insertable<Todo> {
           ? data.completedAt.value
           : this.completedAt,
       priority: data.priority.present ? data.priority.value : this.priority,
-      isCompleted: data.isCompleted.present
-          ? data.isCompleted.value
-          : this.isCompleted,
     );
   }
 
@@ -374,8 +334,7 @@ class Todo extends DataClass implements Insertable<Todo> {
           ..write('createdAt: $createdAt, ')
           ..write('scheduledAt: $scheduledAt, ')
           ..write('completedAt: $completedAt, ')
-          ..write('priority: $priority, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('priority: $priority')
           ..write(')'))
         .toString();
   }
@@ -389,7 +348,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     scheduledAt,
     completedAt,
     priority,
-    isCompleted,
   );
   @override
   bool operator ==(Object other) =>
@@ -401,8 +359,7 @@ class Todo extends DataClass implements Insertable<Todo> {
           other.createdAt == this.createdAt &&
           other.scheduledAt == this.scheduledAt &&
           other.completedAt == this.completedAt &&
-          other.priority == this.priority &&
-          other.isCompleted == this.isCompleted);
+          other.priority == this.priority);
 }
 
 class TodosCompanion extends UpdateCompanion<Todo> {
@@ -413,7 +370,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
   final Value<DateTime?> scheduledAt;
   final Value<DateTime?> completedAt;
   final Value<String> priority;
-  final Value<bool> isCompleted;
   const TodosCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -422,7 +378,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     this.scheduledAt = const Value.absent(),
     this.completedAt = const Value.absent(),
     this.priority = const Value.absent(),
-    this.isCompleted = const Value.absent(),
   });
   TodosCompanion.insert({
     this.id = const Value.absent(),
@@ -432,7 +387,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     this.scheduledAt = const Value.absent(),
     this.completedAt = const Value.absent(),
     required String priority,
-    this.isCompleted = const Value.absent(),
   }) : title = Value(title),
        createdAt = Value(createdAt),
        priority = Value(priority);
@@ -444,7 +398,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     Expression<DateTime>? scheduledAt,
     Expression<DateTime>? completedAt,
     Expression<String>? priority,
-    Expression<bool>? isCompleted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -454,7 +407,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
       if (scheduledAt != null) 'scheduled_at': scheduledAt,
       if (completedAt != null) 'completed_at': completedAt,
       if (priority != null) 'priority': priority,
-      if (isCompleted != null) 'is_completed': isCompleted,
     });
   }
 
@@ -466,7 +418,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     Value<DateTime?>? scheduledAt,
     Value<DateTime?>? completedAt,
     Value<String>? priority,
-    Value<bool>? isCompleted,
   }) {
     return TodosCompanion(
       id: id ?? this.id,
@@ -476,7 +427,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
       scheduledAt: scheduledAt ?? this.scheduledAt,
       completedAt: completedAt ?? this.completedAt,
       priority: priority ?? this.priority,
-      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
@@ -504,9 +454,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     if (priority.present) {
       map['priority'] = Variable<String>(priority.value);
     }
-    if (isCompleted.present) {
-      map['is_completed'] = Variable<bool>(isCompleted.value);
-    }
     return map;
   }
 
@@ -519,8 +466,7 @@ class TodosCompanion extends UpdateCompanion<Todo> {
           ..write('createdAt: $createdAt, ')
           ..write('scheduledAt: $scheduledAt, ')
           ..write('completedAt: $completedAt, ')
-          ..write('priority: $priority, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('priority: $priority')
           ..write(')'))
         .toString();
   }
@@ -546,7 +492,6 @@ typedef $$TodosTableCreateCompanionBuilder =
       Value<DateTime?> scheduledAt,
       Value<DateTime?> completedAt,
       required String priority,
-      Value<bool> isCompleted,
     });
 typedef $$TodosTableUpdateCompanionBuilder =
     TodosCompanion Function({
@@ -557,7 +502,6 @@ typedef $$TodosTableUpdateCompanionBuilder =
       Value<DateTime?> scheduledAt,
       Value<DateTime?> completedAt,
       Value<String> priority,
-      Value<bool> isCompleted,
     });
 
 class $$TodosTableFilterComposer extends Composer<_$AppDatabase, $TodosTable> {
@@ -600,11 +544,6 @@ class $$TodosTableFilterComposer extends Composer<_$AppDatabase, $TodosTable> {
 
   ColumnFilters<String> get priority => $composableBuilder(
     column: $table.priority,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isCompleted => $composableBuilder(
-    column: $table.isCompleted,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -652,11 +591,6 @@ class $$TodosTableOrderingComposer
     column: $table.priority,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<bool> get isCompleted => $composableBuilder(
-    column: $table.isCompleted,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$TodosTableAnnotationComposer
@@ -694,11 +628,6 @@ class $$TodosTableAnnotationComposer
 
   GeneratedColumn<String> get priority =>
       $composableBuilder(column: $table.priority, builder: (column) => column);
-
-  GeneratedColumn<bool> get isCompleted => $composableBuilder(
-    column: $table.isCompleted,
-    builder: (column) => column,
-  );
 }
 
 class $$TodosTableTableManager
@@ -736,7 +665,6 @@ class $$TodosTableTableManager
                 Value<DateTime?> scheduledAt = const Value.absent(),
                 Value<DateTime?> completedAt = const Value.absent(),
                 Value<String> priority = const Value.absent(),
-                Value<bool> isCompleted = const Value.absent(),
               }) => TodosCompanion(
                 id: id,
                 title: title,
@@ -745,7 +673,6 @@ class $$TodosTableTableManager
                 scheduledAt: scheduledAt,
                 completedAt: completedAt,
                 priority: priority,
-                isCompleted: isCompleted,
               ),
           createCompanionCallback:
               ({
@@ -756,7 +683,6 @@ class $$TodosTableTableManager
                 Value<DateTime?> scheduledAt = const Value.absent(),
                 Value<DateTime?> completedAt = const Value.absent(),
                 required String priority,
-                Value<bool> isCompleted = const Value.absent(),
               }) => TodosCompanion.insert(
                 id: id,
                 title: title,
@@ -765,7 +691,6 @@ class $$TodosTableTableManager
                 scheduledAt: scheduledAt,
                 completedAt: completedAt,
                 priority: priority,
-                isCompleted: isCompleted,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

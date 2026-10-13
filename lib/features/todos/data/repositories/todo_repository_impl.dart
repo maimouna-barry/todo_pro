@@ -8,11 +8,6 @@ class TodoRepositoryImpl implements TodoRepository {
   TodoRepositoryImpl(this.dataSource);
 
   @override
-  Future<List<Todo>> getTodos() {
-    return dataSource.getTodos();
-  }
-
-  @override
   Future<Todo?> getTodo(int id) {
     return dataSource.getTodo(id);
   }
@@ -35,5 +30,10 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<void> completedTodo(int id) {
     return dataSource.completedTodo(id);
+  }
+
+  @override
+  Stream<List<Todo>> watchTodos() {
+    return dataSource.watchTodos();
   }
 }

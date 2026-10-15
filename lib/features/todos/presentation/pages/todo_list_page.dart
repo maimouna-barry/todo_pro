@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_pro/features/todos/presentation/providers/todo_providers.dart';
 import 'package:todo_pro/features/todos/presentation/widgets/todo_header.dart';
 import 'package:todo_pro/features/todos/presentation/widgets/todo_list.dart';
+import 'package:todo_pro/features/todos/presentation/widgets/todo_date_selector.dart';
 
 class TodoListPage extends ConsumerWidget {
   const TodoListPage({super.key});
@@ -16,6 +17,7 @@ class TodoListPage extends ConsumerWidget {
         child: Column(
           children: [
             const TodoHeader(),
+            const TodoDateSelector(),
             Expanded(
               child: todosAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),

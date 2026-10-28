@@ -46,7 +46,7 @@ void main() {
 
     await repository.createTodo(todo);
 
-    final todos = await repository.getTodos();
+    final todos = await repository.watchTodos().first;
 
     expect(todos, hasLength(1));
     expect(todos.first.title, 'Faire les courses');

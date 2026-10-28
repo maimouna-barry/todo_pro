@@ -40,6 +40,11 @@ class TodoListPage extends ConsumerWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        tooltip: 'Ajouter une tâche',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

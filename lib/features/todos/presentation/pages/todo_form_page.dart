@@ -1,141 +1,327 @@
 import 'package:flutter/material.dart';
+import 'package:todo_pro/features/todos/presentation/widgets/todo_header.dart';
 
-class TodoFormPage extends StatelessWidget {
+class TodoFormPage extends StatefulWidget {
   const TodoFormPage({super.key});
+  @override
+  State<TodoFormPage> createState() => _TodoFormPageState();
+}
+
+class _TodoFormPageState extends State<TodoFormPage> {
+  DateTime? selectedDate;
+  static const Color primaryGreen = Color(0xFF16A36A);
+  static const Color darkGrey = Color(0xFF343A40);
+  static const Color hintGrey = Color(0xFFADB5BD);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 16, left: 20, right: 20),
-          child: Stack(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 250,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFE9E5FF), Color(0xFFDDE5FF)],
-                    begin: Alignment.topRight,
-                    end: Alignment.topLeft,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: -60,
-                left: -60,
-                child: ClipOval(
+              const TodoHeader(),
+
+              Expanded(
+                child: SingleChildScrollView(
                   child: Container(
-                    width: 220,
-                    height: 180,
-                    color: Colors.white.withValues(alpha: 0.65),
-                  ),
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Partie gauche : bouton et textes
-                  Expanded(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                      ),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            width: 64,
-                            height: 64,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xFFE3E8FF),
+                        Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: primaryGreen,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Color(0xFF172B4D),
-                              size: 30,
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Titre de la tâche',
+                              style: TextStyle(
+                                color: darkGrey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // TITRE
+                        const SizedBox(height: 8),
+
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Ex. : Faire les courses',
+                            hintStyle: const TextStyle(
+                              color: hintGrey,
+                              fontSize: 14,
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.edit_outlined,
+                              color: hintGrey,
+                              size: 20,
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
+                              borderSide: BorderSide(
+                                color: primaryGreen,
+                                width: 1.5,
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
+                              borderSide: BorderSide(
+                                color: primaryGreen,
+                                width: 2.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.description_outlined,
+                              color: primaryGreen,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Description de la tâche',
+                              style: TextStyle(
+                                color: darkGrey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          maxLines: 4,
+                          minLines: 3,
+                          decoration: InputDecoration(
+                            hintText:
+                                'Ajoute quelques détails sur cette tâche...',
+                            hintStyle: const TextStyle(
+                              color: hintGrey,
+                              fontSize: 13,
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.checklist_outlined,
+                              color: hintGrey,
+                              size: 20,
+                            ),
+                            alignLabelWithHint: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: primaryGreen,
+                                width: 1.5,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: primaryGreen,
+                                width: 2.5,
+                              ),
                             ),
                           ),
                         ),
 
                         const SizedBox(height: 24),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.calendar_month_outlined,
+                                        color: primaryGreen,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Text(
+                                        'Échéance (optionnel)',
+                                        style: TextStyle(
+                                          color: darkGrey,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 1.2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
 
-                        const Text(
-                          'Nouvelle tâche',
-                          style: TextStyle(
-                            color: Color(0xFF172B4D),
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
+                                  InkWell(
+                                    onTap: _selectDate,
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 14,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.calendar_today_outlined,
+                                            color: hintGrey,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              selectedDate == null
+                                                  ? 'Choisir une date'
+                                                  : '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}',
+                                              style: const TextStyle(
+                                                color: darkGrey,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: primaryGreen,
+                                            size: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
 
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 24),
 
-                        const Text(
-                          'Organise tes idées et planifie tes journées.',
-                          style: TextStyle(
-                            color: Color(0xFF7A869A),
-                            fontSize: 14,
-                          ),
+                        // PRIORITÉ
+                        Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: primaryGreen,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Priorité',
+                              style: TextStyle(
+                                color: darkGrey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        Row(
+                          children: [
+                            _priority('Basse'),
+                            const SizedBox(width: 10),
+                            _priority('Moyenne'),
+                            const SizedBox(width: 10),
+                            _priority('Haute'),
+                          ],
                         ),
                       ],
                     ),
                   ),
-
-                  const SizedBox(width: 8),
-
-                  // Partie droite : illustration
-                  SizedBox(
-                    width: 120,
-                    height: 140,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFFF4F5FF), Color(0xFFE5E8FF)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Stack(
-                        children: [
-                          const Center(
-                            child: Icon(
-                              Icons.checklist_rounded,
-                              size: 65,
-                              color: Color(0xFF536DFE),
-                            ),
-                          ),
-
-                          Positioned(
-                            right: 8,
-                            bottom: 20,
-                            child: Container(
-                              width: 36,
-                              height: 36,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF536DFE),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _priority(String label) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(35),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(35),
+            border: Border.all(color: primaryGreen),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: primaryGreen,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: primaryGreen,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _selectDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
   }
 }

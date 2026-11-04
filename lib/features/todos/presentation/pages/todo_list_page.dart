@@ -5,6 +5,7 @@ import 'package:todo_pro/features/todos/presentation/widgets/todo_header.dart';
 import 'package:todo_pro/features/todos/presentation/widgets/todo_list.dart';
 import 'package:todo_pro/features/todos/presentation/widgets/todo_date_selector.dart';
 import 'package:todo_pro/features/todos/presentation/providers/selected_date_provider.dart';
+import 'package:todo_pro/features/todos/presentation/pages/todo_form_page.dart';
 
 class TodoListPage extends ConsumerWidget {
   const TodoListPage({super.key});
@@ -39,6 +40,16 @@ class TodoListPage extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TodoFormPage()),
+          );
+        },
+        tooltip: 'Ajouter une tâche',
+        child: const Icon(Icons.add),
       ),
     );
   }
